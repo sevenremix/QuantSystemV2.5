@@ -11,32 +11,37 @@ st.set_page_config(page_title="QuantSystem L2.5", layout="wide")
 # --- 0. 核心样式美化 (CSS Injection) ---
 st.markdown("""
     <style>
-    .main {
-        background-color: #0e1117;
+    /* 全局颜色与字体重量强控 */
+    html, body, [class*="css"], .stApp, .stAlert, div[data-testid="stMarkdownContainer"] * {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        color: #d1d5db !important; /* 统一表格文字色 */
+        font-weight: 400 !important; /* 彻底取消加粗 */
     }
+    .main { background-color: transparent; }
+    
+    /* 强制 st.info (stAlert) 样式：彻底去除蓝调，改为深灰 */
+    div[data-testid="stNotification"], .stAlert, .stAlert > div {
+        background-color: #111111 !important; /* 深黑色调，无蓝调干扰 */
+        border: 1px solid #4b5563 !important; /* 浅灰色边框 */
+        border-radius: 4px !important;
+    }
+    
+    /* 修正面板内字号与表格一致 */
+    div[data-testid="stNotification"] p, .stAlert p, div[data-testid="stMarkdownContainer"] li {
+        font-size: 14px !important; /* 表格标准字号 */
+        line-height: 1.6 !important;
+    }
+    
+    /* 核心指标数值保持特有颜色以便区分 */
     div[data-testid="stMetricValue"] {
-        font-size: 32px;
-        color: #00d4ff;
+        font-size: 28px !important;
+        color: #60a5fa !important;
+        font-weight: 400 !important;
     }
-    .stTable {
-        border-radius: 10px;
-        overflow: hidden;
-        border: 1px solid #30363d;
+    div[data-testid="stMetricLabel"] {
+        color: #9ca3af !important; /* 指标标签稍微调暗 */
     }
-    h1, h2, h3 {
-        color: #ffffff;
-        font-family: 'Inter', sans-serif;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-    }
-    .stInfo {
-        background-color: rgba(23, 31, 45, 0.8);
-        border: 1px solid #1f6feb;
-        border-radius: 8px;
-    }
-    div[data-testid="stMetric"] {
-        text-align: right;
-    }
+    div[data-testid="stMetric"] { text-align: right; }
     div[data-testid="stMetric"] > div {
         display: flex;
         flex-direction: column;
@@ -233,7 +238,7 @@ else:
 # 5. 顶层标题与宏观看板整合 (Header Row)
 title_col, metric_col = st.columns([3, 1])
 with title_col:
-    st.title("QuantSystem L2.5: 监控矩阵")
+    st.title("QuantSystem L2.5")
 with metric_col:
     if curr_ema:
         st.metric("10Y Real Rate (EMA3)", f"{curr_ema:.2f}%", delta=f"-{vel:.2f}% (平滑势能)")
